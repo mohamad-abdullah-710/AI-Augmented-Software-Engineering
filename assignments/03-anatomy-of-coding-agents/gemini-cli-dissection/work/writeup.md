@@ -4,7 +4,7 @@
 **Gemini CLI version (`gemini --version`):** 0.64.0
 **OS / shell:** Windows 11 + Git Bash (inside the VS Code terminal)
 **Model(s) seen in trace:** `gemini-3.5-flash-lite` (all 11 calls)
-**Session commit:** `9d5534a`
+**Session commit:** `10bf72c`
 
 > Evidence tags: `[OBSERVED]` = cite a timeline line, call number, or diff hunk.
 > `[INFERRED]` = say what you're reasoning from.
@@ -55,7 +55,7 @@
 #### Section: Confirm Ambiguity/Expansion + Git Repository (when not to act / confirm) — L51, L223
 > "**Confirm Ambiguity/Expansion:** Do not take significant actions beyond the clear scope of the request without confirming with the user."
 > "**NEVER** stage or commit your changes, unless you are explicitly instructed to commit."
-- **Behavior it produces:** The agent stays inside the task and leaves version control to the user. `[OBSERVED]` The timeline contains no `git` command; the agent's changes were left uncommitted and I committed them myself as `9d5534a`.
+- **Behavior it produces:** The agent stays inside the task and leaves version control to the user. `[OBSERVED]` The timeline contains no `git` command; the agent's changes were left uncommitted and I committed them myself as `10bf72c`.
 - **Failure it prevents:** An agent that "helpfully" commits, pushes or expands the task (refactoring unrelated code) without permission — destructive or hard-to-undo actions the user did not ask for.
 
 #### Section: Development Lifecycle (workflow) — L135, L144
@@ -72,7 +72,7 @@
 
 #### Section: Engineering Standards — Testing — L49
 > "**Testing:** ALWAYS search for and update related tests after making a code change. You must add a new test case to the existing test file (if one exists) or create a new test file to verify your changes."
-- **Behavior it produces:** The agent adds tests together with features. `[OBSERVED]` Diff of `9d5534a`: three new tests in `tests/test_pricing.py` (`test_shipping_fee_empty_or_zero`, `_below_threshold`, `_at_or_above_threshold`) and two in `tests/test_cart.py` (`test_free_shipping_at_or_above_50_dollars`, `test_discount_influences_free_shipping_threshold`), added to the existing files instead of new ones.
+- **Behavior it produces:** The agent adds tests together with features. `[OBSERVED]` Diff of `10bf72c`: three new tests in `tests/test_pricing.py` (`test_shipping_fee_empty_or_zero`, `_below_threshold`, `_at_or_above_threshold`) and two in `tests/test_cart.py` (`test_free_shipping_at_or_above_50_dollars`, `test_discount_influences_free_shipping_threshold`), added to the existing files instead of new ones.
 - **Failure it prevents:** Features shipped without verification, which later break silently.
 
 #### Section: Topic Updates — L56–61
@@ -241,7 +241,7 @@ call 11 ████████████████████████
 `[OBSERVED]` The agent had no tool failures (18 tool calls, 0 failed), and its first `pytest` run (call #2) was intentional reproduction of the 2 known failures (`test_add_same_item_twice_increments_quantity`, `test_fixed_discount_applied_before_tax`). It fixed both on the first try: the final pytest run in call #9 was followed directly by "Task Complete". `[INFERRED]` It got it right first time because it read all code and tests before editing, so the "Strategic Re-evaluation" rule (L146, rethink after 3 failed fixes) never triggered.
 
 ### 5. The tests
-`[OBSERVED]` Yes, the agent edited three existing tests in `tests/test_cart.py` (diff of `9d5534a`):
+`[OBSERVED]` Yes, the agent edited three existing tests in `tests/test_cart.py` (diff of `10bf72c`):
 ```diff
 -    assert cart.total() == 2160  # 2000 + 8% tax
 +    assert cart.total() == 2759  # 2000 + 8% tax + $5.99 shipping fee (subtotal < $50)
